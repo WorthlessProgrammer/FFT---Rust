@@ -8,6 +8,12 @@ struct ImgVec {
     stride: usize
 }
 
+#[derive(Debug)]
+struct ComplexNum {
+    real: f32,
+    img: f32
+}
+
 impl ImgVec {
 
     pub fn new() -> ImgVec {
@@ -56,10 +62,38 @@ impl ImgVec {
 
         Ok(())
     }
+    
+    // TODO is this heap or stack?
+    pub fn rgb2gray(&self) -> [f32; 256*256] {
+        let mut gray_pixels: [f32; 256*256] = [0.0; 256*256];
+        for i in 0..self.stride*self.stride {
+            let r = (self.pixels[i] >> 8*0) & 0x000000FF as u32;
+            let g = (self.pixels[i] >> 8*1) & 0x000000FF as u32;
+            let b = (self.pixels[i] >> 8*2) & 0x000000FF as u32;
+            let fr = r as f32;
+            let fg = g as f32;
+            let fb = b as f32;
+            gray_pixels[i] = 0.299*fr + 0.587*fg + 0.114*fb;
+        }
+        gray_pixels
+    }
+    
+    pub fn ft(&self) {
+
+    }
+
 }
 
 fn main() {
     let mut im = ImgVec::new();
     im.draw_square(8, 128, 128, 0x181818FF);
     im.dump_bmp("test.ppm".to_string()).unwrap();
+    let gray_p: [f32; 256*256] = im.rgb2gray();
+    for i in 0..255 {
+        for j in 0..255 {
+            let mut index = j*256+i;
+            print!("{} ", gray_p[index])
+        }
+        println!("")
+    }
 }
