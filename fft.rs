@@ -2,16 +2,13 @@ use std::fs::File;
 use std::io::BufWriter;
 use std::io::prelude::*;
 
+mod complex;
+use complex::ComplexNum;
+
 #[derive(Debug)]
 struct ImgVec {
     pixels: [u32; IMG_SZ],
     stride: usize
-}
-
-#[derive(Debug)]
-struct ComplexNum {
-    real: f32,
-    img: f32
 }
 
 impl ImgVec {
@@ -82,10 +79,16 @@ fn ft(pixels: &[f32; IMG_SZ]) {
 const IMG_SZ: usize = 256*256;
 const IMG_STRIDE: usize = 256;
 
-fn main() {
+fn main2() {
     let mut im = ImgVec::new();
     im.draw_square(8, 128, 128, 0x181818FF);
     im.dump_bmp("test.ppm".to_string()).unwrap();
     let gray_p: [f32; IMG_SZ] = im.rgb2gray();
     ft(&gray_p);
+}
+
+fn main() {
+    let a = ComplexNum::new(3.0, 2.0);
+    let b = ComplexNum::new(4.0, 5.0);
+    println!("{:?}", a/b);
 }
