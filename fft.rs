@@ -89,6 +89,5 @@ fn main2() {
 
 fn main() {
     let a = ComplexNum::new(3.0, 2.0);
-    let b = ComplexNum::new(4.0, 5.0);
-    println!("{:?}", a/b);
+    println!("{:?}", complex::exp(5.0, a));
 }
