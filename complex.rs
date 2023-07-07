@@ -14,6 +14,10 @@ impl ComplexNum {
     pub fn conjugate(self) -> ComplexNum {
         Self::new(self.real, -self.img)
     }
+
+    pub fn i() -> ComplexNum {
+        Self::new(0.0, 1.0)
+    }
 }
 
 impl Add for ComplexNum {
@@ -24,6 +28,22 @@ impl Add for ComplexNum {
 
     fn add(self, other: Self) -> Self {
         Self {real: self.real + other.real, img: self.img + other.img}
+    }
+}
+
+impl Add<i32> for ComplexNum {
+    type Output = Self;
+
+    fn add(self, other: i32) -> Self {
+        Self {real: self.real + other as f32, img: self.img}
+    }
+}
+
+impl Add<f32> for ComplexNum {
+    type Output = Self;
+
+    fn add(self, other: f32) -> Self {
+        Self {real: self.real + other, img: self.img}
     }
 }
 
@@ -61,6 +81,14 @@ impl Mul for ComplexNum {
     }
 }
 
+impl Mul<f32> for ComplexNum {
+    type Output = Self;
+
+    fn mul(self, other: f32) -> Self {
+        Self {real: self.real * other, img: self.img * other}
+    }
+}
+
 impl Div for ComplexNum {
 
     // TODO: Put the formula
@@ -70,6 +98,16 @@ impl Div for ComplexNum {
     fn div(self, other: Self) -> Self::Output {
         let numerator = self*other;
         let denominator = other.real*other.real + other.img*other.img;
+        //TODO: Handle 0 div error.
         Self::new(numerator.real/denominator, numerator.img/denominator)
     }
+}
+
+//functions 
+
+pub fn exp(base: f32, power: ComplexNum) -> ComplexNum {
+
+    // a^(b + ci) = a^b(cos(clna) + sin(clna))
+
+    ComplexNum::new((base.ln()*power.img).cos(), (base.ln()*power.img).sin()) * base.powf(power.real)
 }
