@@ -2,8 +2,8 @@ use std::ops::*;
 
 #[derive(Debug, Clone, Copy)]
 pub struct ComplexNum {
-    real: f32,
-    img: f32
+    pub real: f32,
+    pub img: f32
 }
 
 impl ComplexNum {
@@ -107,7 +107,7 @@ impl Div for ComplexNum {
 
 pub fn exp(base: f32, power: ComplexNum) -> ComplexNum {
 
-    // a^(b + ci) = a^b(cos(clna) + sin(clna))
+    // a^(b + ci) = a^b(cos(clna) + sin(clna)i)
 
     ComplexNum::new((base.ln()*power.img).cos(), (base.ln()*power.img).sin()) * base.powf(power.real)
 }
