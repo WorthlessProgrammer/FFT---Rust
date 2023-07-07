@@ -6,14 +6,26 @@ mod complex;
 use complex::ComplexNum;
 
 #[derive(Debug)]
-struct ImgVec {
-    pixels: [u32; IMG_SZ],
+struct ImgVec<T> {
+    pixels: [T; IMG_SZ],
     stride: usize
 }
 
-impl ImgVec {
+impl ImgVec<ComplexNum> {
+    pub fn new() -> ImgVec<ComplexNum> {
+        ImgVec{pixels: [ComplexNum{real: 0.0, img: 0.0}; IMG_SZ], stride: IMG_STRIDE}
+    }
+}
 
-    pub fn new() -> ImgVec {
+impl ImgVec<f32> {
+    pub fn new() -> ImgVec<f32> {
+        ImgVec{pixels: [0.0; IMG_SZ], stride: IMG_STRIDE}
+    }
+}
+
+impl ImgVec<u32> {
+
+    pub fn new() -> ImgVec<u32> {
         ImgVec{pixels: [0; IMG_SZ], stride: IMG_STRIDE}
     }
 
@@ -60,34 +72,31 @@ impl ImgVec {
         Ok(())
     }
     
-    pub fn rgb2gray(&self) -> [f32; IMG_SZ] {
-        let mut gray_pixels: [f32; IMG_SZ] = [0.0; IMG_SZ];
+    pub fn rgb2gray(&self) -> ImgVec<f32> {
+        let mut gray_img = ImgVec::<f32>::new();
         for i in 0..IMG_SZ {
             let r = ((self.pixels[i] >> 8*0) & 0x000000FF as u32) as f32;
             let g = ((self.pixels[i] >> 8*1) & 0x000000FF as u32) as f32;
             let b = ((self.pixels[i] >> 8*2) & 0x000000FF as u32) as f32;
-            gray_pixels[i] = 0.299*r + 0.587*g + 0.114*b;
+            gray_img.pixels[i] = 0.299*r + 0.587*g + 0.114*b;
         }
-        gray_pixels
+        gray_img
     }
-}
-
-fn ft(pixels: &[f32; IMG_SZ]) {
-    println!("OK")
 }
 
 const IMG_SZ: usize = 256*256;
 const IMG_STRIDE: usize = 256;
 
-fn main2() {
-    let mut im = ImgVec::new();
+fn main() {
+    let mut im = ImgVec::<u32>::new();
     im.draw_square(8, 128, 128, 0x181818FF);
     im.dump_bmp("test.ppm".to_string()).unwrap();
-    let gray_p: [f32; IMG_SZ] = im.rgb2gray();
-    ft(&gray_p);
+    let gray_p = im.rgb2gray();
 }
 
+/*
 fn main() {
     let a = ComplexNum::new(3.0, 2.0);
     println!("{:?}", complex::exp(5.0, a));
 }
+*/
