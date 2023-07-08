@@ -103,6 +103,14 @@ impl Div for ComplexNum {
     }
 }
 
+impl Div<f32> for ComplexNum {
+    type Output = Self;
+
+    fn div(self, other: f32) -> Self::Output {
+        Self::new(self.real/other, self.img/other)
+    }
+}
+
 //functions 
 
 pub fn exp(base: f32, power: ComplexNum) -> ComplexNum {
