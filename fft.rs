@@ -21,6 +21,10 @@ impl ImgVec<f32> {
     pub fn new() -> ImgVec<f32> {
         ImgVec{pixels: [0.0; IMG_SZ], stride: IMG_STRIDE}
     }
+
+    pub fn ft(&self) {
+        println!("OKTU\n");
+    }
 }
 
 impl ImgVec<u32> {
@@ -87,16 +91,51 @@ impl ImgVec<u32> {
 const IMG_SZ: usize = 256*256;
 const IMG_STRIDE: usize = 256;
 
-fn main() {
+fn main2() {
     let mut im = ImgVec::<u32>::new();
     im.draw_square(8, 128, 128, 0x181818FF);
     im.dump_bmp("test.ppm".to_string()).unwrap();
     let gray_p = im.rgb2gray();
 }
 
-/*
+
 fn main() {
-    let a = ComplexNum::new(3.0, 2.0);
-    println!("{:?}", complex::exp(5.0, a));
+
+    const size: usize = 4;
+    let euler: f32 = std::f32::consts::E;
+    let pi: f32 = std::f32::consts::PI;
+
+    let a: [f32; size] = [1.0, 0.0, -2.0, -1.0];
+    let mut b: [ComplexNum; size] = [ComplexNum{real: 0.0, img: 0.0}; size];
+    let mut b2: [ComplexNum; size] = [ComplexNum{real: 0.0, img: 0.0}; size];
+
+    /* Vector FT */
+
+    for i in 0..size {
+        for j in 0..size {
+            b[i] += complex::exp(euler, ComplexNum::i()*(j as f32*-2.0*pi*i as f32/size as f32))*a[j];
+        }
+    }
+
+    /* Matrix FT */
+
+    for i in 0..size/2 {
+        for j in 0..size/2 {
+            let index = i*size/2 + j;
+            for x in 0..size/2 {
+                for y in 0..size/2 {
+                    b2[index] += complex::exp(
+                        euler, 
+                        ComplexNum::i() *
+                            (-2.0*pi*
+                            (i as f32*x as f32 + j as f32*y as f32)
+                            /2.0)
+                    ) * a[x*size/2 + y];
+                }
+            }
+        }
+        b2[i] = b2[i] * 0.5;
+    }
+
+    for i in 0..4 { println!("{:?} ", b2[i]); }
 }
-*/
